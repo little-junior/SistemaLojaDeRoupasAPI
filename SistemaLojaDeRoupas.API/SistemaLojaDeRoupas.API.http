@@ -1,0 +1,6 @@
+@SistemaLojaDeRoupas.API_HostAddress = http://localhost:5210
+
+GET {{SistemaLojaDeRoupas.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
