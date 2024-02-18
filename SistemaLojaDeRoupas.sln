@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaLojaDeRoupas.API", "SistemaLojaDeRoupas.API\SistemaLojaDeRoupas.API.csproj", "{673194F9-2346-4250-A588-8FD3F4E9822A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaLojaDeRoupas.Models", "SistemaLojaDeRoupas.Model\SistemaLojaDeRoupas.Models.csproj", "{749B1A36-A4DD-47D0-8DE4-D2301E7D1070}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaLojaDeRoupas.Models", "SistemaLojaDeRoupas.Models\SistemaLojaDeRoupas.Models.csproj", "{749B1A36-A4DD-47D0-8DE4-D2301E7D1070}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaLojaDeRoupas.Repository", "SistemaLojaDeRoupas.Repository\SistemaLojaDeRoupas.Repository.csproj", "{22DB4327-C5E7-4868-86B9-DC4535228C43}"
 EndProject
