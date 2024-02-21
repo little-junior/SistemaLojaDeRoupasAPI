@@ -8,11 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Enums.NET" Version="4.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\SistemaLojaDeRoupas.Models\SistemaLojaDeRoupas.Models.csproj" />
+    <ProjectReference Include="..\SistemaLojaDeRoupas.Repository\SistemaLojaDeRoupas.Repository.csproj" />
   </ItemGroup>
 
 </Project>

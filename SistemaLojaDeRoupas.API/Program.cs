@@ -1,3 +1,6 @@
+using SistemaLojaDeRoupas.Repository;
+using SistemaLojaDeRoupas.Models;
+using SistemaLojaDeRoupas.API.Filters;
 
 namespace SistemaLojaDeRoupas.API
 {
@@ -9,7 +12,24 @@ namespace SistemaLojaDeRoupas.API
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("ShopPolicy", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5500").AllowAnyMethod();
+                });
+            });
+
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<LogResultFilter>();
+            });
+
+            // builder.Services.AddControllers();
+
+            builder.Services.AddSingleton<IRepository<Venda>, VendaRepository>();
+            builder.Services.AddSingleton<IRepository<Devolucao>, DevolucaoRepository>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -22,6 +42,8 @@ namespace SistemaLojaDeRoupas.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors();
 
             app.UseAuthorization();
 

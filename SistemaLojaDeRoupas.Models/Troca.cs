@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SistemaLojaDeRoupas.Models
 {
-    internal class Troca
+    public class Troca
     {
     }
 }
