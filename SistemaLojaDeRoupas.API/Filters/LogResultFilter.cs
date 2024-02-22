@@ -16,7 +16,7 @@ namespace SistemaLojaDeRoupas.API.Filters
             var metodo = context.HttpContext.Request.Method;
             if (context.HttpContext.Response.StatusCode <= 399)
             {
-                _logger.LogInformation($"{metodo} terminou com sucesso.");
+                _logger.LogInformation($"{metodo} responded with success");
                 return;
             }
 
@@ -28,7 +28,7 @@ namespace SistemaLojaDeRoupas.API.Filters
             var metodo = context.HttpContext.Request.Method;
             if (context.HttpContext.Response.StatusCode <= 399)
             {
-                _logger.LogInformation($"{metodo} começando...");
+                _logger.LogInformation($"{metodo} requested");
                 return;
             }
 
