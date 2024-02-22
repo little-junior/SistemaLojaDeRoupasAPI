@@ -6,6 +6,8 @@ using SistemaLojaDeRoupas.Models.Enums;
 using SistemaLojaDeRoupas.API.RequestDTOs;
 using System;
 using EnumsNET;
+using SistemaLojaDeRoupas.API.CustomExceptions;
+using SistemaLojaDeRoupas.API.BusinessLayers;
 
 namespace SistemaLojaDeRoupas.API.Controllers
 {
@@ -16,10 +18,12 @@ namespace SistemaLojaDeRoupas.API.Controllers
     public class DevolucaoController : ControllerBase
     {
         private readonly IRepository<Devolucao> _devolucaoRepository;
+        private readonly DevolucaoBL _devolucaoBL;
 
-        public DevolucaoController(IRepository<Devolucao> devolucaoRepository)
+        public DevolucaoController(IRepository<Devolucao> devolucaoRepository, DevolucaoBL devolucaoBL)
         {
             _devolucaoRepository = devolucaoRepository;
+            _devolucaoBL = devolucaoBL;
         }
 
         [HttpGet]
@@ -28,9 +32,9 @@ namespace SistemaLojaDeRoupas.API.Controllers
         {
             var devolucoes = _devolucaoRepository.GetAll();
 
-            List<object> list = new List<object>();
+            var list = new List<object>();
 
-            foreach(var devolucao in devolucoes)
+            foreach (var devolucao in devolucoes)
             {
                 list.Add(new
                 {
@@ -45,42 +49,68 @@ namespace SistemaLojaDeRoupas.API.Controllers
         }
 
         [HttpGet("Troca")]
-        public IActionResult GetTroca()
+        public IActionResult GetTrocas()
         {
-            return Ok(_devolucaoRepository.GetAll().Where(entity => entity.TipoOperacao == TipoOperacao.Troca));
+            var trocas = _devolucaoRepository.GetAll().Where(entity => entity.TipoOperacao == TipoOperacao.Troca);
+
+            return Ok(trocas);
         }
 
         [HttpGet("Reembolso")]
-        public IActionResult GetReembolso()
+        public IActionResult GetReembolsos()
         {
-            return Ok(_devolucaoRepository.GetAll().Where(entity => entity.TipoOperacao == TipoOperacao.Reembolso));
+            var reembolsos = _devolucaoRepository.GetAll().Where(entity => entity.TipoOperacao == TipoOperacao.Troca);
+
+            return Ok(reembolsos);
         }
 
         [HttpGet("Troca/{id}")]
         public IActionResult GetTrocaByID(int id)
         {
-            return Ok(_devolucaoRepository.GetAll().FirstOrDefault(entity => entity.Id == id && entity.TipoOperacao == TipoOperacao.Troca));
+            var troca = _devolucaoRepository.GetAll().FirstOrDefault(entity => entity.Id == id && entity.TipoOperacao == TipoOperacao.Troca);
+
+            if (troca == null)
+                throw new CustomException("Object not found", StatusCodes.Status404NotFound);
+
+            return Ok(troca);
         }
 
 
         [HttpGet("Reembolso/{id}")]
-        public IActionResult GetReembolsoByID(int id)
+        public IActionResult GetReembolsoByVendaID(int id)
         {
-            return Ok(_devolucaoRepository.GetAll().Where(entity => entity.Id == id && entity.TipoOperacao == TipoOperacao.Reembolso));
+            var reembolso = _devolucaoRepository.GetAll().Where(entity => entity.Id == id && entity.TipoOperacao == TipoOperacao.Reembolso);
+
+            if (reembolso == null)
+                throw new CustomException("Object not found", StatusCodes.Status404NotFound);
+
+            return Ok(reembolso);
         }
 
         [HttpPost("Troca")]
-        public IActionResult PostTroca([FromBody] DevolucaoRequest devolucaoDTO)
+        public IActionResult PostTroca([FromBody] DevolucaoRequest devolucaoRequest)
         {
-            var devolucao = new Devolucao(devolucaoDTO.VendaId, TipoOperacao.Troca, devolucaoDTO.Motivo, devolucaoDTO.ProdutosQuantidade);
-            return Ok(_devolucaoRepository.Add(devolucao));
+            _devolucaoBL.ValidateRequestProdutosQuantidade(devolucaoRequest);
+            _devolucaoBL.ValidateRequestMotivo(devolucaoRequest);
+            _devolucaoBL.ValidateRequestVendaId(devolucaoRequest);
+
+            var troca = new Devolucao(devolucaoRequest.VendaId, TipoOperacao.Troca, devolucaoRequest.Motivo, devolucaoRequest.ProdutosQuantidade);
+            _devolucaoRepository.Add(troca);
+
+            return Created($"/api/Devolucao/Troca", troca);
         }
 
         [HttpPost("Reembolso")]
-        public IActionResult PostReembolso([FromBody] DevolucaoRequest devolucaoDTO)
+        public IActionResult PostReembolso([FromBody] DevolucaoRequest devolucaoRequest)
         {
-            var devolucao = new Devolucao(devolucaoDTO.VendaId, TipoOperacao.Reembolso, devolucaoDTO.Motivo, devolucaoDTO.ProdutosQuantidade);
-            return Ok(_devolucaoRepository.Add(devolucao));
+            _devolucaoBL.ValidateRequestProdutosQuantidade(devolucaoRequest);
+            _devolucaoBL.ValidateRequestMotivo(devolucaoRequest);
+            _devolucaoBL.ValidateRequestVendaId(devolucaoRequest);
+
+            var reembolso = new Devolucao(devolucaoRequest.VendaId, TipoOperacao.Reembolso, devolucaoRequest.Motivo, devolucaoRequest.ProdutosQuantidade);
+            _devolucaoRepository.Add(reembolso);
+
+            return Created($"/api/Devolucao/Reembolso", reembolso);
         }
     }
 }
