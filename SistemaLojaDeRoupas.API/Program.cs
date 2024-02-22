@@ -1,6 +1,7 @@
 using SistemaLojaDeRoupas.Repository;
 using SistemaLojaDeRoupas.Models;
 using SistemaLojaDeRoupas.API.Filters;
+using SistemaLojaDeRoupas.API.BusinessLayers;
 
 namespace SistemaLojaDeRoupas.API
 {
@@ -23,12 +24,16 @@ namespace SistemaLojaDeRoupas.API
             builder.Services.AddControllers(options =>
             {
                 options.Filters.Add<LogResultFilter>();
+                options.Filters.Add<ExceptionFilter>();
             });
 
             // builder.Services.AddControllers();
 
             builder.Services.AddSingleton<IRepository<Venda>, VendaRepository>();
             builder.Services.AddSingleton<IRepository<Devolucao>, DevolucaoRepository>();
+
+            builder.Services.AddScoped<DevolucaoBL, DevolucaoBL>();
+            builder.Services.AddScoped<VendaBL, VendaBL>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -46,7 +51,6 @@ namespace SistemaLojaDeRoupas.API
             app.UseCors();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
